@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="author" content="Jeferson Hernandez jefersonhernandez81@gmail.com" />
+    <title>Abeja WebAR</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+    <style>
+      .arjs-loader {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .arjs-loader div {
+        text-align: center;
+        font-size: 1.25em;
+        color: white;
+      }
+      .UIbuttons {
+        position: absolute;
+        bottom: 60px;
+        left: 50%;
+        width: 30%;
+        z-index: 5;
+        transform: translate(-50%, 50%);
+      }
+      .UIbuttons img {
+        width: 100%;
+      }
+      .hidden {
+        display: none;
+      }
+      .popAnimation {
+        animation-duration: 0.6s;
+        animation-name: popupAnimation;
+      }
+
+      @keyframes popupAnimation {
+        from {
+          transform: scale(0.8);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+
+  <body oncontextmenu="return false" onkeydown="return false" style="margin : 0px; overflow: hidden;">
+    <div class="arjs-loader">
+      <div>Cargando, Porfavor espere...</div>
+    </div>
+  <!--  <div class="hidden" id="arContainerUI">
+      <div class="UIbuttons">
+        <img
+          class=""
+          id="playButton"
+          src="play_button.png"
+        />
+      </div>
+    </div> -->
+    <a-scene
+      vr-mode-ui="enabled: false;"
+      renderer="logarithmicDepthBuffer: true;"
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
+    >
+      <a-box log="Hello, Box!"></a-box>
+
+      <a-assets>
+        <video
+          id="myvideo"
+          src="abeja.mp4"
+          playsinline
+          muted
+          webkit-playsinline
+          autoplay
+          loop="true"
+        ></video>
+      </a-assets>
+      <!--    url="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/Firux00/prueba-video-abejaelzo66/main/nft/abeja" --> 
+      <a-nft
+        markerhandler
+        type="nft"
+        url="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/Firux00/prueba-video-abejaelzo66/main/nft/abeja" 
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-video
+          src="#myvideo"
+          width="120"
+          height="180"
+          position="38 -30 -150"
+          rotation="-90 0 0"
+          autoplay="true"
+        ></a-video>
+      </a-nft>
+      <a-entity camera position="0 0 0"></a-entity>
+    </a-scene>
+  </body>
+ 
+
+<script>
+    window.onload = function() {
+        AFRAME.registerComponent('markerhandler', {
+            init: function () {
+                var marker = this.el;
+
+                var myVideo = document.querySelector("#myvideo");
+
+                marker.addEventListener('markerFound', function () {
+                     marker.classList.add("popAnimation");
+                    myVideo.muted = false;
+                    myVideo.play();
+                }.bind(this));
+
+    marker.addEventListener('markerLost', function() {
+      myVideo.pause();
+      myVideo.currentTime = 0;
+            marker.classList.remove("popAnimation");
+
+    }.bind(this));
+            }
+        });
+    };
+</script>
+
+</html>
